@@ -5,7 +5,7 @@ const Op = db.Sequelize.Op;
 // Create and Save a new User
 exports.create = (req, res) => {
   // Validate request
-  if (!req.body.UserName) {
+  if (!req.body.FirstName) {
     res.status(400).send({
       message: "Content can not be empty!"
     });
@@ -14,10 +14,10 @@ exports.create = (req, res) => {
 
   // Create a new User
   const user = {
-    User_Name: req.body.UserName,
-    User_Age: req.body.Age,
-    User_Place:req.body.Place,
-    published: req.body.published ? req.body.published : false
+    First_Name: req.body.FirstName,
+    Last_Name: req.body.LastName,
+    User_Adress:req.body.Adress,
+    Phone_Number: req.body.PhoneNumber
   };
 
   // Save a user in the database
@@ -29,7 +29,7 @@ exports.create = (req, res) => {
     .catch(err => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while creating the Tutorial."
+          err.message || "Some error occurred while creating User."
       });
     });
 };
@@ -37,9 +37,10 @@ exports.create = (req, res) => {
 
 // Retrieve all users from the database.
 exports.findAll = (req, res) => {
-    const title = req.query.UserName;
-    var condition = title ? { UserName: { [Op.iLike]: `%${UserName}%` } } : null;
-  
+    const title = req.query.FirstName;
+    console.log(title);
+    var condition = title ? { First_Name: { [Op.iLike]: `%${First_Name}%` } } : null;
+
     User.findAll({ where: condition })
       .then(data => {
         res.send(data);
@@ -47,7 +48,7 @@ exports.findAll = (req, res) => {
       .catch(err => {
         res.status(500).send({
           message:
-            err.message || "Some error occurred while retrieving tutorials."
+            err.message || "Some error occurred while retrieving users."
         });
       });
 };
@@ -62,7 +63,7 @@ exports.findOne = (req, res) => {
       })
       .catch(err => {
         res.status(500).send({
-          message: "Error retrieving Tutorial with id=" + id
+          message: "Error retrieving users with id=" + id
         });
       });
 };
@@ -77,17 +78,17 @@ exports.update = (req, res) => {
       .then(num => {
         if (num == 1) {
           res.send({
-            message: "Tutorial was updated successfully."
+            message: "Users was updated successfully."
           });
         } else {
           res.send({
-            message: `Cannot update Tutorial with id=${id}. Maybe Tutorial was not found or req.body is empty!`
+            message: `Cannot update user with id=${id}. Maybe Tutorial was not found or req.body is empty!`
           });
         }
       })
       .catch(err => {
         res.status(500).send({
-          message: "Error updating Tutorial with id=" + id
+          message: "Error updating user with id=" + id
         });
       });
 };
@@ -104,17 +105,17 @@ exports.delete = (req, res) => {
       .then(num => {
         if (num == 1) {
           res.send({
-            message: "Tutorial was deleted successfully!"
+            message: "User was deleted successfully!"
           });
         } else {
           res.send({
-            message: `Cannot delete Tutorial with id=${id}. Maybe Tutorial was not found!`
+            message: `Cannot delete user with id=${id}. Maybe Tutorial was not found!`
           });
         }
       })
       .catch(err => {
         res.status(500).send({
-          message: "Could not delete Tutorial with id=" + id
+          message: "Could not delete user with id=" + id
         });
       });
 };
@@ -126,26 +127,26 @@ exports.deleteAll = (req, res) => {
         truncate: false
       })
         .then(nums => {
-          res.send({ message: `${nums} Tutorials were deleted successfully!` });
+          res.send({ message: `${nums} users were deleted successfully!` });
         })
         .catch(err => {
           res.status(500).send({
             message:
-              err.message || "Some error occurred while removing all tutorials."
+              err.message || "Some error occurred while removing all users."
           });
         });
 };
 
 // Find all published Users
 exports.findAllPublished = (req, res) => {
-    User.findAll({ where: { published: true } })
+    User.findAll({ where: { User_Adress: "trivandrum" } })
     .then(data => {
       res.send(data);
     })
     .catch(err => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while retrieving tutorials."
+          err.message || "Some error occurred while retrieving users."
       });
     });
 
